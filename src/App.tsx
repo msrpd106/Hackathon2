@@ -3,6 +3,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import { Headphones, Search, LogIn, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Chatbot } from './components/Chatbot';
 import { Login } from './pages/Login';
+import { About } from './pages/About';
 
 function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -168,7 +169,7 @@ function App() {
               <Link to="#" className="text-gray-300 hover:text-white">สถานะ</Link>
               <Link to="#" className="text-gray-300 hover:text-white">นิยาย</Link>
               <Link to="#" className="text-gray-300 hover:text-white">ข่าว</Link>
-              <Link to="#" className="text-gray-300 hover:text-white">เกี่ยวกับเรา</Link>
+              <Link to="/about" className="text-gray-300 hover:text-white">เกี่ยวกับเรา</Link>
               <Search className="h-5 w-5 text-gray-300 hover:text-white cursor-pointer" />
               <Link to="/login">
                 <LogIn className="h-5 w-5 text-gray-300 hover:text-white cursor-pointer" />
@@ -181,6 +182,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </div>
   );
