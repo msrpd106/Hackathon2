@@ -5,6 +5,7 @@ import { Chatbot } from './components/Chatbot';
 import { Login } from './pages/Login';
 import { About } from './pages/About';
 import { Novels } from './pages/Novels';
+import { Articles } from './pages/Articles';
 
 function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -166,7 +167,7 @@ function App() {
             </div>
             
             <div className="flex items-center space-x-8">
-              <Link to="#" className="text-gray-300 hover:text-white">บทความ</Link>
+              <Link to="/articles" className="text-gray-300 hover:text-white">บทความ</Link>
               <Link to="#" className="text-gray-300 hover:text-white">สถานะ</Link>
               <Link to="/novels" className="text-gray-300 hover:text-white">นิยาย</Link>
               <Link to="#" className="text-gray-300 hover:text-white">ข่าว</Link>
@@ -185,6 +186,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/novels" element={<Novels />} />
+        <Route path="/articles" element={<Articles />} />
       </Routes>
     </div>
   );
