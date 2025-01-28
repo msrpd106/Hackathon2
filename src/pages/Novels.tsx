@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, BookOpen, Star, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Search, Clock, User, Star, BookOpen } from 'lucide-react';
 
 interface Novel {
   id: number;
@@ -241,9 +242,11 @@ export function Novels() {
                     {new Date(novel.lastUpdated).toLocaleDateString('th-TH')}
                   </span>
                 </div>
-                <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                  อ่านเลย
-                </button>
+                <Link to={`/novels/${novel.id}`}>
+                  <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    อ่านเลย
+                  </button>
+                </Link>
               </div>
             </div>
           ))}
