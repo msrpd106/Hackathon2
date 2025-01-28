@@ -4,6 +4,7 @@ import { Headphones, Search, LogIn, ChevronRight, ChevronLeft } from 'lucide-rea
 import { Chatbot } from './components/Chatbot';
 import { Login } from './pages/Login';
 import { About } from './pages/About';
+import { Novels } from './pages/Novels';
 
 function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -167,7 +168,7 @@ function App() {
             <div className="flex items-center space-x-8">
               <Link to="#" className="text-gray-300 hover:text-white">บทความ</Link>
               <Link to="#" className="text-gray-300 hover:text-white">สถานะ</Link>
-              <Link to="#" className="text-gray-300 hover:text-white">นิยาย</Link>
+              <Link to="/novels" className="text-gray-300 hover:text-white">นิยาย</Link>
               <Link to="#" className="text-gray-300 hover:text-white">ข่าว</Link>
               <Link to="/about" className="text-gray-300 hover:text-white">เกี่ยวกับเรา</Link>
               <Search className="h-5 w-5 text-gray-300 hover:text-white cursor-pointer" />
@@ -183,6 +184,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
+        <Route path="/novels" element={<Novels />} />
       </Routes>
     </div>
   );
