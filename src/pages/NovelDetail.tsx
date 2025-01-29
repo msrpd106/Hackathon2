@@ -1,56 +1,44 @@
-import React, { useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { Play, Pause, SkipBack, SkipForward, Volume2, Star, BookOpen, Clock, User } from 'lucide-react';
-
-interface Chapter {
-  id: number;
-  title: string;
-  duration: string;
-  audioUrl: string;
-}
+import React, { useState, useRef, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Play, Pause, SkipBack, SkipForward, Volume2, Star, BookOpen, Clock, User, ChevronLeft } from 'lucide-react';
+import { getNovelById } from '../data/novels';
 
 export function NovelDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(1);
   const [currentChapter, setCurrentChapter] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Mock data - In a real app, this would come from an API
-  const novel = {
-    id: parseInt(id || '1'),
-    title: 'รักในวันฝนพรำ',
-    author: 'ฝนพราว',
-    cover: 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7',
-    rating: 4.5,
-    category: 'นิยายรัก',
-    description: `เรื่องราวความรักที่เริ่มต้นในวันฝนพรำ ระหว่างสาวน้อยผู้หลงใหลในสายฝนและหนุ่มนักดนตรีที่มีความฝันอันยิ่งใหญ่ 
-    พวกเขาได้พบกันโดยบังเอิญใต้ชายคาเดียวกันในวันที่ฝนตกหนัก และนั่นคือจุดเริ่มต้นของความรักที่งดงาม แต่ก็ต้องฝ่าฟันอุปสรรคมากมาย`,
-    totalChapters: 45,
-    totalDuration: '15 ชั่วโมง 30 นาที',
-    views: 12500,
-    chapters: [
-      {
-        id: 1,
-        title: 'บทที่ 1: วันที่ฝนพรำ',
-        duration: '20:30',
-        audioUrl: 'https://example.com/chapter1.mp3'
-      },
-      {
-        id: 2,
-        title: 'บทที่ 2: ความบังเอิญใต้ชายคา',
-        duration: '22:15',
-        audioUrl: 'https://example.com/chapter2.mp3'
-      },
-      {
-        id: 3,
-        title: 'บทที่ 3: เสียงเพลงในสายฝน',
-        duration: '19:45',
-        audioUrl: 'https://example.com/chapter3.mp3'
-      }
-    ]
-  };
+  const novel = getNovelById(parseInt(id || '0'));
+
+  if (!novel) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900">ไม่พบนิยายที่คุณต้องการ</h1>
+            <button
+              onClick={() => navigate(-1)}
+              className="mt-4 inline-flex items-center text-blue-600 hover:text-blue-700"
+            >
+              <ChevronLeft className="h-5 w-5 mr-1" />
+              กลับไปหน้าที่แล้ว
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const chapters = Array.from({ length: novel.chapters }, (_, i) => ({
+    id: i + 1,
+    title: `บทที่ ${i + 1}`,
+    duration: '20:00',
+    audioUrl: 'https://example.com/chapter.mp3'
+  }));
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -94,6 +82,15 @@ export function NovelDetail() {
   return (
     <div className="min-h-screen bg-gray-50 pt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
+        >
+          <ChevronLeft className="h-6 w-6" />
+          <span>กลับ</span>
+        </button>
+
         {/* Novel Info */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="md:flex">
@@ -122,14 +119,14 @@ export function NovelDetail() {
                 </div>
                 <div className="flex items-center">
                   <BookOpen className="h-5 w-5 mr-1" />
-                  <span>{novel.totalChapters} ตอน</span>
+                  <span>{novel.chapters} ตอน</span>
                 </div>
                 <div className="flex items-center">
                   <Clock className="h-5 w-5 mr-1" />
-                  <span>{novel.totalDuration}</span>
+                  <span>{novel.views.toLocaleString()} views</span>
                 </div>
               </div>
-              <p className="text-gray-600 mb-6">{novel.description}</p>
+              <p className="text-gray-600 mb-6">{novel.description || 'ไม่มีคำอธิบายเพิ่มเติม'}</p>
             </div>
           </div>
 
@@ -139,11 +136,11 @@ export function NovelDetail() {
               ref={audioRef}
               onTimeUpdate={handleTimeUpdate}
               onEnded={() => setIsPlaying(false)}
-              src={novel.chapters[currentChapter].audioUrl}
+              src={chapters[currentChapter].audioUrl}
             />
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1">
-                <h3 className="font-semibold">{novel.chapters[currentChapter].title}</h3>
+                <h3 className="font-semibold">{chapters[currentChapter].title}</h3>
                 <p className="text-sm text-gray-400">{novel.author}</p>
               </div>
               <div className="flex items-center space-x-2">
@@ -163,6 +160,7 @@ export function NovelDetail() {
               <button
                 onClick={() => setCurrentChapter(Math.max(0, currentChapter - 1))}
                 className="p-2 hover:bg-gray-800 rounded-full"
+                disabled={currentChapter === 0}
               >
                 <SkipBack className="h-6 w-6" />
               </button>
@@ -173,8 +171,9 @@ export function NovelDetail() {
                 {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
               </button>
               <button
-                onClick={() => setCurrentChapter(Math.min(novel.chapters.length - 1, currentChapter + 1))}
+                onClick={() => setCurrentChapter(Math.min(chapters.length - 1, currentChapter + 1))}
                 className="p-2 hover:bg-gray-800 rounded-full"
+                disabled={currentChapter === chapters.length - 1}
               >
                 <SkipForward className="h-6 w-6" />
               </button>
@@ -188,7 +187,7 @@ export function NovelDetail() {
                   onChange={handleSeek}
                   className="flex-1"
                 />
-                <span className="text-sm">{novel.chapters[currentChapter].duration}</span>
+                <span className="text-sm">{chapters[currentChapter].duration}</span>
               </div>
             </div>
           </div>
@@ -198,7 +197,7 @@ export function NovelDetail() {
         <div className="mt-8 bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4">รายการตอน</h2>
           <div className="space-y-4">
-            {novel.chapters.map((chapter, index) => (
+            {chapters.map((chapter, index) => (
               <button
                 key={chapter.id}
                 onClick={() => setCurrentChapter(index)}

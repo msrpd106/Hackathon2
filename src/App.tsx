@@ -7,6 +7,7 @@ import { Chatbot } from './components/Chatbot';
 import { Login } from './pages/Login';
 import { About } from './pages/About';
 import { Novels } from './pages/Novels';
+import { CategoryView } from './pages/CategoryView';
 import { NovelDetail } from './pages/NovelDetail';
 import { Articles } from './pages/Articles';
 import { News } from './pages/News';
@@ -32,6 +33,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/novels" element={<Novels />} />
+        <Route path="/category/:category" element={<CategoryView />} />
         <Route path="/novels/:id" element={<NovelDetail />} />
         <Route path="/articles" element={<Articles />} />
         <Route path="/news" element={<News />} />
