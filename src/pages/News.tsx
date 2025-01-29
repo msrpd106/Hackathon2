@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { Search, Clock, User, ThumbsUp, MessageCircle, Share2 } from 'lucide-react';
+import { Search, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface NewsItem {
   id: number;
   title: string;
   content: string;
-  author: string;
+  source: string;
   category: string;
   image: string;
-  date: string;
-  likes: number;
-  comments: number;
-  shares: number;
+  timestamp: string;
+  isHot?: boolean;
 }
 
 export function News() {
@@ -20,121 +19,96 @@ export function News() {
 
   const categories = [
     'ทั้งหมด',
+    'กีฬา',
     'เทคโนโลยี',
     'บันเทิง',
-    'กีฬา',
     'การเงิน',
     'การศึกษา',
     'สุขภาพ'
   ];
 
   const newsItems: NewsItem[] = [
-    // เทคโนโลยี
+    // Hot Topic
     {
       id: 1,
-      title: 'Apple เปิดตัว iPhone 15 Pro Max รุ่นใหม่',
-      content: 'Apple ได้เปิดตัว iPhone 15 Pro Max พร้อมกล้องที่พัฒนาขึ้น และชิป A17 Pro ที่ทรงพลังที่สุด',
-      author: 'เทคนิค นิวส์',
-      category: 'เทคโนโลยี',
-      image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab',
-      date: '2024-03-15',
-      likes: 1520,
-      comments: 234,
-      shares: 456
+      title: 'นักว่ายน้ำไทยทำลายสถิติเอเชียนเกมส์',
+      content: 'นักว่ายน้ำทีมชาติไทยสร้างประวัติศาสตร์คว้าเหรียญทองพร้อมทำลายสถิติในการแข่งขันเอเชียนเกมส์ 2024',
+      source: 'CNN Indonesia',
+      category: 'กีฬา',
+      image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635',
+      timestamp: '2 Hours Ago',
+      isHot: true
     },
+    // Latest News
     {
       id: 2,
-      title: 'Samsung เปิดตัวสมาร์ทโฟนพับได้รุ่นใหม่',
-      content: 'Samsung ได้เปิดตัว Galaxy Z Fold 5 และ Z Flip 5 พร้อมดีไซน์ใหม่และฟีเจอร์ที่น่าสนใจ',
-      author: 'มือถือ อัพเดท',
-      category: 'เทคโนโลยี',
-      image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf',
-      date: '2024-03-14',
-      likes: 1200,
-      comments: 180,
-      shares: 320
+      title: 'การแข่งขันฟันดาบระดับนานาชาติ',
+      content: 'การแข่งขันฟันดาบชิงแชมป์เอเชียจัดขึ้นที่กรุงเทพฯ',
+      source: 'CNN Indonesia',
+      category: 'กีฬา',
+      image: 'https://images.unsplash.com/photo-1614886137686-181bab6ae68f',
+      timestamp: '1 Hour Ago'
     },
-
-    // บันเทิง
     {
       id: 3,
-      title: 'BTS ประกาศจัดคอนเสิร์ตใหญ่ในไทย',
-      content: 'BTS เตรียมจัดคอนเสิร์ตใหญ่ในประเทศไทย พร้อมโชว์เพลงฮิตทั้งหมด',
-      author: 'บันเทิง ทูเดย์',
-      category: 'บันเทิง',
-      image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
-      date: '2024-03-13',
-      likes: 2500,
-      comments: 450,
-      shares: 780
+      title: 'การแข่งขันวิ่งมาราธอนระดับโลก',
+      content: 'นักวิ่งจากทั่วโลกร่วมการแข่งขันมาราธอนที่กรุงเทพฯ',
+      source: 'CNN Indonesia',
+      category: 'กีฬา',
+      image: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5',
+      timestamp: '1 Hour Ago'
     },
     {
       id: 4,
-      title: 'ภาพยนตร์ไทยคว้ารางวัลระดับโลก',
-      content: 'ภาพยนตร์ไทยเรื่องล่าสุดได้รับรางวัลจากเทศกาลภาพยนตร์นานาชาติ',
-      author: 'หนัง วิจารณ์',
-      category: 'บันเทิง',
-      image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728',
-      date: '2024-03-12',
-      likes: 1800,
-      comments: 320,
-      shares: 560
+      title: 'การแข่งขันว่ายน้ำระดับเยาวชน',
+      content: 'เยาวชนไทยโชว์ฟอร์มเยี่ยมในการแข่งขันว่ายน้ำ',
+      source: 'CNN Indonesia',
+      category: 'กีฬา',
+      image: 'https://images.unsplash.com/photo-1519315901367-f34ff9154487',
+      timestamp: '1 Hour Ago'
     },
-
-    // กีฬา
     {
       id: 5,
-      title: 'ทีมชาติไทยเข้ารอบฟุตบอลโลก',
-      content: 'ทีมชาติไทยสร้างประวัติศาสตร์ผ่านเข้ารอบฟุตบอลโลก 2026',
-      author: 'กีฬา อัพเดท',
+      title: 'การแข่งขันว่ายน้ำโอลิมปิก',
+      content: 'ทีมว่ายน้ำไทยเตรียมความพร้อมสู่โอลิมปิก',
+      source: 'CNN Indonesia',
       category: 'กีฬา',
-      image: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55',
-      date: '2024-03-11',
-      likes: 3500,
-      comments: 890,
-      shares: 1200
+      image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635',
+      timestamp: '1 Hour Ago'
     },
     {
       id: 6,
-      title: 'นักเทนนิสไทยคว้าแชมป์ระดับ ATP',
-      content: 'นักเทนนิสไทยสร้างชื่อคว้าแชมป์รายการ ATP Tour ครั้งแรก',
-      author: 'เทนนิส นิวส์',
+      title: 'การแข่งขันบาสเกตบอล NBA',
+      content: 'ไฮไลท์การแข่งขัน NBA ประจำสัปดาห์',
+      source: 'CNN Indonesia',
       category: 'กีฬา',
-      image: 'https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff',
-      date: '2024-03-10',
-      likes: 2200,
-      comments: 450,
-      shares: 680
+      image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc',
+      timestamp: '1 Hour Ago'
     },
-
-    // การเงิน
     {
       id: 7,
-      title: 'เงินบาทแข็งค่าสูงสุดในรอบปี',
-      content: 'ค่าเงินบาทแข็งค่าขึ้นสูงสุดในรอบปี ส่งผลดีต่อการนำเข้า',
-      author: 'การเงิน วิเคราะห์',
-      category: 'การเงิน',
-      image: 'https://images.unsplash.com/photo-1621981386829-2b2df0613e4b',
-      date: '2024-03-09',
-      likes: 1100,
-      comments: 230,
-      shares: 450
+      title: 'การแข่งขันเซิร์ฟบอร์ดระดับโลก',
+      content: 'นักเซิร์ฟชาวไทยสร้างชื่อในการแข่งขันระดับโลก',
+      source: 'CNN Indonesia',
+      category: 'กีฬา',
+      image: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f',
+      timestamp: '1 Hour Ago'
     },
     {
       id: 8,
-      title: 'ตลาดหุ้นไทยทำจุดสูงสุดใหม่',
-      content: 'SET Index ทำจุดสูงสุดใหม่จากแรงซื้อนักลงทุนต่างชาติ',
-      author: 'หุ้น วิเคราะห์',
-      category: 'การเงิน',
-      image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3',
-      date: '2024-03-08',
-      likes: 1400,
-      comments: 280,
-      shares: 520
+      title: 'การแข่งขันจักรยานทางไกล',
+      content: 'นักปั่นจักรยานไทยคว้าแชมป์การแข่งขันระดับเอเชีย',
+      source: 'CNN Indonesia',
+      category: 'กีฬา',
+      image: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182',
+      timestamp: '1 Hour Ago'
     }
   ];
 
-  const filteredNews = newsItems.filter(item => {
+  const hotTopic = newsItems.find(item => item.isHot);
+  const latestNews = newsItems.filter(item => !item.isHot);
+
+  const filteredNews = latestNews.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.content.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'ทั้งหมด' || item.category === selectedCategory;
@@ -142,11 +116,11 @@ export function News() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
+    <div className="min-h-screen bg-white pt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Search and Categories */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <div className="relative w-full md:w-96 mb-4 md:mb-0">
+        <div className="mb-12">
+          <div className="relative mb-6">
             <input
               type="text"
               placeholder="ค้นหาข่าว..."
@@ -165,7 +139,7 @@ export function News() {
                 className={`px-4 py-2 rounded-full text-sm whitespace-nowrap ${
                   selectedCategory === category
                     ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
                 {category}
@@ -174,53 +148,73 @@ export function News() {
           </div>
         </div>
 
-        {/* News Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredNews.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="bg-blue-600 text-white px-2 py-1 rounded-full text-sm">
-                    {item.category}
-                  </span>
-                  <div className="flex items-center text-gray-500 text-sm">
-                    <Clock className="h-4 w-4 mr-1" />
-                    {new Date(item.date).toLocaleDateString('th-TH')}
+        {/* Hot Topics */}
+        {hotTopic && (
+          <div className="mb-16">
+            <h2 className="text-4xl font-bold mb-8">Hot Topics</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="relative h-[400px] rounded-lg overflow-hidden">
+                <img
+                  src={hotTopic.image}
+                  alt={hotTopic.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent">
+                  <div className="absolute bottom-0 p-6">
+                    <h3 className="text-3xl font-bold text-white mb-2">{hotTopic.title}</h3>
+                    <div className="flex items-center text-sm text-gray-300">
+                      <Clock className="h-4 w-4 mr-1" />
+                      <span>{hotTopic.timestamp}</span>
+                      <span className="mx-2">•</span>
+                      <span>{hotTopic.source}</span>
+                    </div>
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                <p className="text-gray-600 mb-4">{item.content}</p>
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <div className="flex items-center">
-                    <User className="h-4 w-4 mr-1" />
-                    {item.author}
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <span className="flex items-center">
-                      <ThumbsUp className="h-4 w-4 mr-1" />
-                      {item.likes}
-                    </span>
-                    <span className="flex items-center">
-                      <MessageCircle className="h-4 w-4 mr-1" />
-                      {item.comments}
-                    </span>
-                    <span className="flex items-center">
-                      <Share2 className="h-4 w-4 mr-1" />
-                      {item.shares}
-                    </span>
-                  </div>
+              </div>
+              <div className="flex items-center">
+                <div>
+                  <h3 className="text-4xl font-bold mb-4">Nisi,</h3>
+                  <p className="text-gray-600 text-lg leading-relaxed">
+                    {hotTopic.content}
+                  </p>
+                  <Link to={`/news/${hotTopic.id}`} className="text-blue-600 hover:text-blue-700 mt-4 inline-block">
+                    read more
+                  </Link>
                 </div>
-                <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                  อ่านเพิ่มเติม
-                </button>
               </div>
             </div>
-          ))}
+          </div>
+        )}
+
+        {/* Latest News */}
+        <div>
+          <h2 className="text-4xl font-bold mb-8">Latest News</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredNews.map((item) => (
+              <Link key={item.id} to={`/news/${item.id}`} className="group">
+                <div className="bg-white rounded-lg overflow-hidden">
+                  <div className="relative h-48">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-xl mb-2 group-hover:text-blue-600 transition-colors">
+                      {item.title}
+                    </h3>
+                    <div className="flex items-center text-sm text-gray-500">
+                      <Clock className="h-4 w-4 mr-1" />
+                      <span>{item.timestamp}</span>
+                      <span className="mx-2">•</span>
+                      <span>{item.source}</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>
